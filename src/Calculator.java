@@ -97,46 +97,27 @@ public class Calculator implements ActionListener {
       }
     }
     if (e.getSource() == addButton) {
-      if (textField.getText().isEmpty()) {
-        num2 = 0;
-      }
-      num1 = Double.parseDouble(textField.getText());
+      num1 = getNum(textField.getText());
       operator = '+';
       textField.setText("+");
     }
     if (e.getSource() == subButton) {
-      if (textField.getText().isEmpty()) {
-        num2 = 0;
-      }
-      num1 = Double.parseDouble(textField.getText());
+      num1 = getNum(textField.getText());
       operator = '-';
       textField.setText("-");
     }
     if (e.getSource() == mulButton) {
-      if (textField.getText().isEmpty()) {
-        num2 = 0;
-      }
-      num1 = Double.parseDouble(textField.getText());
+      num1 = getNum(textField.getText());
       operator = '*';
       textField.setText("*");
     }
     if (e.getSource() == divButton) {
-      if (textField.getText().isEmpty()) {
-        num2 = 0;
-      }
-      num1 = Double.parseDouble(textField.getText());
+      num1 = getNum(textField.getText());
       operator = '/';
       textField.setText("/");
     }
 
     if (e.getSource() == equButton) {
-      System.out.println(textField.getText());
-      System.out.println(hasOperator(textField.getText()));
-      System.out.println(num1);
-      System.out.println(num2);
-      if (textField.getText().isEmpty() || hasOperator(textField.getText())) {
-        num2 = 0;
-      }
       calculate();
       textField.setText(String.valueOf(result));
       num1 = 0;
@@ -146,6 +127,11 @@ public class Calculator implements ActionListener {
 
     if (e.getSource() == clrButton) {
       textField.setText("");
+      num1 = 0;
+      num2 = 0;
+      result = 0;
+      operator = 0;
+      isResultDisplayed = false;
     }
   }
 
@@ -154,15 +140,19 @@ public class Calculator implements ActionListener {
         text.contains("*") || text.contains("/");
   }
 
+  private double getNum(String text) {
+    if (text.isEmpty() || hasOperator(text)) {
+      return 0;
+    } else {
+      String[] nums = text.split("[+\\-*/]");
+      return Double.parseDouble(nums[nums.length - 1]);
+    }
+  }
+
   private void calculate() {
     if (operator != 0) {
       try {
-        String text = textField.getText().replaceAll("[^0-9]", "");
-        if (text.isEmpty()) {
-          num2 = 0;
-        } else {
-          num2 = Double.parseDouble(text);
-        }
+        num2 = getNum(textField.getText());
         switch (operator) {
           case '+':
             result = num1 + num2;
@@ -181,7 +171,9 @@ public class Calculator implements ActionListener {
       } catch (NumberFormatException ex) {
         textField.setText("Error");
       }
-    } else {
+    } else
+
+    {
       num1 = Double.parseDouble(textField.getText());
     }
   }
